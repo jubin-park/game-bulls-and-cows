@@ -8,9 +8,12 @@ class GameWindow < (Example rescue Gosu::Window)
   def initialize
     super WIDTH, HEIGHT
     self.caption = "Bulls and Cows"
+    @message = Gosu::Image.from_text("Start!", 45)
   end
   
   def draw
+    Gosu.draw_rect(96, 160, 128, 48, Gosu::Color::GRAY)
+    @message.draw(112, 162, 1)
   end
 
   def update
