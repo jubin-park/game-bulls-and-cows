@@ -9,10 +9,9 @@ class GameWindow < (Example rescue Gosu::Window)
   def initialize
     super WIDTH, HEIGHT
     self.caption = "Bulls and Cows"
-    @start_button = Button.new(self, 128, 48)
+    @start_button = Button.new(self, 128, 48, "Start")
     @start_button.x = 96
     @start_button.y = 160
-    @start_button.caption = "Start"
   end
 
   def draw
