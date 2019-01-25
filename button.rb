@@ -3,12 +3,18 @@ class Button
 	attr_accessor :x, :y
 	attr_accessor :width, :height
 	attr_writer :caption
+	attr :window
 
 	def initialize(window, width, height)
-	    @x, @y = 0, 0
+	    @window = window
 	    @width, @height = width, height
+	    @x, @y = 0, 0
 	    @caption = ""
 	    @gimage_caption = Gosu::Image.from_text("Start", 32)
+	end
+
+	def under_mouse?
+		return @window.mouse_x >= @x && @window.mouse_x < @x + @width && @window.mouse_y >= @y && @window.mouse_y < @y + @height
 	end
 
 	def draw(z)

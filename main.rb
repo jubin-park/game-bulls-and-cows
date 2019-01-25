@@ -29,7 +29,7 @@ class GameWindow < (Example rescue Gosu::Window)
 
   def button_down(id)
     if (id == Gosu::MsLeft)
-      
+      p "!" if @start_button.under_mouse?
     end
   end
 end
