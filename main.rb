@@ -1,6 +1,7 @@
 # Encoding: UTF-8
 
 require "gosu"
+require_relative "button"
 
 WIDTH, HEIGHT = 320, 320
 
@@ -17,7 +18,7 @@ class GameWindow < (Example rescue Gosu::Window)
   end
 
   def update
-    close if Gosu.button_down? Gosu::MS_RIGHT
+    close if Gosu.button_down?(Gosu::MS_RIGHT)
   end
 
   def needs_cursor?
@@ -26,10 +27,9 @@ class GameWindow < (Example rescue Gosu::Window)
 
   def button_down(id)
     if (id == Gosu::MsLeft)
-      p "click!"
+      
     end
   end
-
 end
 
 GameWindow.new.show if __FILE__ == $0
