@@ -4,6 +4,7 @@ class Button
 	attr_accessor :width, :height
 	attr_writer :caption
 	attr :window
+	attr_accessor :gimage_caption
 
 	def initialize(window, width, height, caption="")
 	    @window = window
@@ -11,6 +12,7 @@ class Button
 	    @x, @y = 0, 0
 	    @caption = caption
 	    @gimage_caption = Gosu::Image.from_text(@caption, height * 0.6)
+	    ObjectSpace.define_finalizer(self, self.class.method(:finalize))
 	end
 
 	def under_mouse?
@@ -23,8 +25,12 @@ class Button
 		else
 			Gosu.draw_rect(@x, @y, @width, @height, Gosu::Color::GRAY)
 		end
-		if not (@caption.empty?)
+		if (!@caption.empty? && !@gimage_caption.nil?)
 			@gimage_caption.draw(@x + (@width - @gimage_caption.width) / 2, @y + (height - @gimage_caption.height) / 2, z + 1)
 		end
 	end
+
+  def self.finalize(object_id)
+    p "finalizing %d" % object_id
+  end
 end
