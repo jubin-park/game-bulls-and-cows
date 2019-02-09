@@ -9,6 +9,10 @@ class GameWindow < (Example rescue Gosu::Window)
   def initialize
     super WIDTH, HEIGHT
     self.caption = "Bulls and Cows"
+    @button = [Gosu::Image.new("img/button-start0.png"), Gosu::Image.new("img/button-start1.png")]
+
+    @x, @y, @width, @height = 96, 160, 128, 48
+
     @start_button = Button.new(self, 128, 48, "Start")
     @start_button.x = 96
     @start_button.y = 160
@@ -16,6 +20,11 @@ class GameWindow < (Example rescue Gosu::Window)
 
   def draw
     @start_button.draw(0)
+    if self.mouse_x >= @x && self.mouse_x < @x + @width && self.mouse_y >= @y && self.mouse_y < @y + @height
+      @button[1].draw(96, 160, 1)
+    else
+      @button[0].draw(96, 160, 1)
+    end
   end
 
   def update

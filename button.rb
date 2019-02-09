@@ -21,9 +21,9 @@ class Button
 
 	def draw(z)
 		if under_mouse?
-			Gosu.draw_rect(@x, @y, @width, @height, Gosu::Color::CYAN)
+			#Gosu.draw_rect(@x, @y, @width, @height, Gosu::Color::CYAN)
 		else
-			Gosu.draw_rect(@x, @y, @width, @height, Gosu::Color::GRAY)
+			#Gosu.draw_rect(@x, @y, @width, @height, Gosu::Color::GRAY)
 		end
 		if (!@caption.empty? && !@gimage_caption.nil?)
 			@gimage_caption.draw(@x + (@width - @gimage_caption.width) / 2, @y + (height - @gimage_caption.height) / 2, z + 1)
