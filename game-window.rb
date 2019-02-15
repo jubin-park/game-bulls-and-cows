@@ -2,15 +2,15 @@ class GameWindow < Gosu::Window
   def initialize
     super WIDTH, HEIGHT
     self.caption = "Bulls and Cows"
-    @scene = SceneIntro.new(self)
+    SceneManager.switch(self, SceneIntro)
   end
 
   def draw
-    @scene.draw
+    SceneManager.now.draw
   end
 
   def update
-    @scene.update
+    SceneManager.now.update
   end
 
   def needs_cursor?
