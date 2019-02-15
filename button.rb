@@ -1,7 +1,6 @@
 class Button
 
-	attr_accessor :x, :y
-	attr_accessor :width, :height
+	attr_accessor :x, :y, :width, :height
 	attr_writer :caption
 	attr_reader :window
 	attr_accessor :gimage_caption
