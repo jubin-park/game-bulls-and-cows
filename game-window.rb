@@ -19,7 +19,7 @@ class GameWindow < Gosu::Window
 
   def button_down(id)
     if (id == Gosu::MsLeft)
-      p "click"
+      #p "click"
     end
   end
 end

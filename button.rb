@@ -15,7 +15,8 @@ class Button
 	    if !@caption.nil?
 	    	@gi_caption = Gosu::Image.from_text(@caption, height * 0.6)
 	    end
-	    ObjectSpace.define_finalizer(self, self.class.method(:finalize))
+	    @area = :out
+      @mouse = :up
 	end
 
 	def set_image(index, gi)
@@ -33,11 +34,35 @@ class Button
 		end
 	end
 
+  def update
+    if under_mouse?
+      if Gosu.button_down?(Gosu::MS_LEFT)
+      	if @area == :in
+	      	if @mouse == :up
+	      		p "down"
+	      		@mouse = :down
+	      	end
+      	end
+      else
+      	@area = :in
+      	if @mouse == :down
+      		p "up"
+      		@mouse = :up
+      	end
+      end
+    else
+    	@area = :out
+    	if Gosu.button_down?(Gosu::MS_LEFT)
+    		if @mouse == :down
+    			#p "!"
+    		end
+    	else
+    		@mouse = :up
+    	end
+    end
+  end
+
 	def under_mouse?
 		return @window.mouse_x >= @x && @window.mouse_x < @x + @width && @window.mouse_y >= @y && @window.mouse_y < @y + @height
 	end
-
-  def self.finalize(object_id)
-    p "finalizing %d" % object_id
-  end
 end
