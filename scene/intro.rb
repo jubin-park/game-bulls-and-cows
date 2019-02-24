@@ -14,8 +14,7 @@ class Scene
     end
 
     def button_up
-      @a += 1
-      p @a
+      SceneManager.switch(Scene::Game)
     end
 
     def button_down

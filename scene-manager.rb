@@ -1,8 +1,14 @@
 module SceneManager
   @@scene = nil
-  def self.switch(window, klass)
+  @@window = nil
+
+  def self.set_window(window)
+  	@@window = window
+  end
+
+  def self.switch(klass)
     @@scene = nil
-    @@scene = klass.new(window)
+    @@scene = klass.new(@@window)
   end
 
   def self.now

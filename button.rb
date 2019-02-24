@@ -1,24 +1,22 @@
 class Button
-
   attr_reader   :window
   attr_accessor :x, :y, :width, :height, :z
   attr_writer   :caption
   attr_accessor :gi_caption
 
   def initialize(window, width, height, caption=nil)
-      @window = window
-      @x, @y = 0, 0
-      @width, @height = width, height
-      @z = 0
-      @caption = caption
-      @image = Array.new(2)
-      if !@caption.nil?
-        @gi_caption = Gosu::Image.from_text(@caption, height * 0.6)
-      end
-      @area = :out
-      @mouse = :up
-
-      @event_method = Hash.new
+    @window = window
+    @x, @y = 0, 0
+    @width, @height = width, height
+    @z = 0
+    @caption = caption
+    @image = Array.new(2)
+    if !@caption.nil?
+      @gi_caption = Gosu::Image.from_text(@caption, height * 0.6)
+    end
+    @area = :out
+    @mouse = :up
+    @event_method = Hash.new
   end
 
   def set_image(index, gi)
@@ -71,6 +69,6 @@ class Button
   end
 
   def set_method(type, mtd)
-    @event_method[type.to_sym] = mtd
+    @event_method[type] = mtd
   end
 end
