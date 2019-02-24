@@ -2,9 +2,9 @@
 
 require "gosu"
 require_relative "game-window"
-
 require_relative "scene-manager"
-require_relative "scene-intro"
+require_relative "scene/intro"
+require_relative "scene/game"
 
 require_relative "button"
 

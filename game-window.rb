@@ -2,7 +2,7 @@ class GameWindow < Gosu::Window
   def initialize
     super WIDTH, HEIGHT
     self.caption = "Bulls and Cows"
-    SceneManager.switch(self, SceneIntro)
+    SceneManager.switch(self, Scene::Intro)
   end
 
   def draw
