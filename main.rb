@@ -2,8 +2,10 @@
 
 require "gosu"
 require_relative "game-window"
+
 require_relative "scene-manager"
 require_relative "scene-intro"
+
 require_relative "button"
 
 WIDTH, HEIGHT = 320, 320

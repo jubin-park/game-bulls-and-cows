@@ -17,6 +17,8 @@ class Button
       end
       @area = :out
       @mouse = :up
+
+      @event_method = Hash.new
   end
 
   def set_image(index, gi)
@@ -39,14 +41,16 @@ class Button
       if Gosu.button_down?(Gosu::MS_LEFT)
         if @area == :in
           if @mouse == :up
-            p "down"
+            #p "down"
+            @event_method[:mouse_down].call if not @event_method[:mouse_down].nil?
             @mouse = :down
           end
         end
       else
         @area = :in
         if @mouse == :down
-          p "up"
+          #p "up"
+          @event_method[:mouse_up].call if not @event_method[:mouse_up].nil?
           @mouse = :up
         end
       end
@@ -64,5 +68,9 @@ class Button
 
   def under_mouse?
     return @window.mouse_x >= @x && @window.mouse_x < @x + @width && @window.mouse_y >= @y && @window.mouse_y < @y + @height
+  end
+
+  def set_method(type, mtd)
+    @event_method[type.to_sym] = mtd
   end
 end

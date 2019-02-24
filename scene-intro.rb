@@ -8,7 +8,17 @@ class SceneIntro
     @button_start.z = 1
     @button_start.set_image(0, Gosu::Image.new("img/button-start0.png"))
     @button_start.set_image(1, Gosu::Image.new("img/button-start1.png"))
-    ObjectSpace.define_finalizer(self, self.class.method(:finalize))
+    @button_start.set_method(:mouse_down, method(:button_down))
+    @button_start.set_method(:mouse_up, method(:button_up))
+  end
+
+  def button_up
+    @a += 1
+    p @a
+  end
+
+  def button_down
+    @a ||= 100
   end
 
   def draw
@@ -18,9 +28,5 @@ class SceneIntro
 
   def update
     @button_start.update
-  end
-
-  def self.finalize(object_id)
-    p "finalizing %d" % object_id
   end
 end
