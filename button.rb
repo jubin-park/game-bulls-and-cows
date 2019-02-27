@@ -27,7 +27,15 @@ class Button
     if !under_mouse?
       @image[0].draw(@x, @y, @z)
     else
-      @image[1].draw(@x, @y, @z)
+      if @mouse == :down
+        if @image[2].is_a?(Gosu::Image)
+          @image[2].draw(@x, @y, @z)
+        else
+          @image[1].draw(@x, @y, @z)
+        end
+      else
+        @image[1].draw(@x, @y, @z)
+      end
     end
     if !@gi_caption.nil?
       @gi_caption.draw(@x + (@width - @gi_caption.width) / 2, @y + (height - @gi_caption.height) / 2, @z + 1)
