@@ -18,9 +18,7 @@ class Scene
       SceneManager.switch(Scene::Game)
     end
 
-    def button_down
-      @a ||= 100
-    end
+    def button_down; end
 
     def draw
       @background.draw(0, 0, 0)
