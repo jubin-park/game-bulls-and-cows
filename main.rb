@@ -1,6 +1,7 @@
 # Encoding: UTF-8
 
 require "gosu"
+require_relative "gosu-image"
 require_relative "game-window"
 require_relative "scene-manager"
 require_relative "button"

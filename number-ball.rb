@@ -1,14 +1,14 @@
 class NumberBall
-  attr_accessor :x, :y
+  attr_accessor :x, :y, :z
   attr_reader   :index
 
+  DIAMETER      = 16
   COLOR_EASYMED = Gosu::Color.argb(0x0045B649)
-  DIAMETER = 16
-
+  
   def initialize(window, x, y, z, index)
-    @window = window
     @@numbers ||= Gosu::Image.new("img/numbers.png")
-    @@circle ||= Gosu::Image.new("img/circle16.png")
+    @@circle  ||= Gosu::Image.new("img/circle16.png")
+    @window = window
     @x = x
     @y = y
     @z = z
@@ -31,6 +31,6 @@ class NumberBall
   end
 
   def under_mouse?
-    return @window.mouse_x >= @x && @window.mouse_x < @x + DIAMETER && @window.mouse_y >= @y && @window.mouse_y < @y + DIAMETER
+    return @window.mouse_x >= @x && @window.mouse_x < @x + DIAMETER && @window.mouse_y >= @y && @window.mouse_y < @y + DIAMETER && @@circle[@window.mouse_x-@x, @window.mouse_y-@y] != "\0\0\0\0"
   end
 end
