@@ -2,7 +2,7 @@ class NumberBall
   attr_accessor :x, :y
   attr_reader   :index
 
-  COLOR_EASYMED = Gosu::Color.argb(0xFF45B649)
+  COLOR_EASYMED = Gosu::Color.argb(0x0045B649)
   DIAMETER = 16
 
   def initialize(window, x, y, z, index)
@@ -14,16 +14,19 @@ class NumberBall
     @z = z
     @index = index
     @num = @@numbers.subimage(@index * DIAMETER, 0, DIAMETER, DIAMETER)
+    @color_easymed = COLOR_EASYMED.dup
   end
 
   def draw
-    @@circle.draw(@x, @y, @z, 1, 1, COLOR_EASYMED)
+    @@circle.draw(@x, @y, @z, 1, 1, @color_easymed)
     @num.draw(@x, @y, @z)
   end
 
   def update
     if under_mouse?
-      p @index
+      @color_easymed.alpha += 16
+    else
+      @color_easymed.alpha -= 8
     end
   end
 
