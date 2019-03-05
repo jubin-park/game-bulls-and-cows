@@ -19,6 +19,7 @@ class NumberBall
     @picked = false
 
     @mouse_sx = @mouse_sy = nil
+    @mouse = :up
   end
 
   def draw
@@ -32,27 +33,53 @@ class NumberBall
     else
       @color_easymed.alpha -= 8
     end
-    
+
+    if Gosu.button_down?(Gosu::MS_LEFT)
+      if under_mouse?(@nx, @ny)
+        if @mouse == :up
+          @mouse = :down
+          p "down"
+          @picked = !@picked
+        end
+      end
+    else
+      if @mouse == :down
+        @mouse = :up
+        p "up"
+      end
+    end
+
+    if @picked == true
+      @nx = @window.mouse_x.to_i - DIAMETER / 2
+      @ny = @window.mouse_y.to_i - DIAMETER / 2
+    end
+=begin
     # 집지 않은 상태
     if @picked == false
       # 숫자 영역에 마우스가 올려질 때
       if under_mouse?(@nx, @ny)
         # 마우스를 누를 때
         if Gosu.button_down?(Gosu::MS_LEFT)
+          p "pick up"
           @picked = true
         end
       end
     # 집은 상태
     else
-      @nx = @window.mouse_x - DIAMETER / 2
-      @ny = @window.mouse_y - DIAMETER / 2
+      @nx = @window.mouse_x.to_i# - DIAMETER / 2
+      @ny = @window.mouse_y.to_i# - DIAMETER / 2
       if Gosu.button_down?(Gosu::MS_LEFT)
+        p "pick down"
         @picked = false
       end
     end
   end
+=end
+end
 
   def under_mouse?(x, y)
-    return @window.mouse_x >= x && @window.mouse_x < x + DIAMETER && @window.mouse_y >= y && @window.mouse_y < y + DIAMETER && @@circle[@window.mouse_x-x, @window.mouse_y-y] != "\0\0\0\0"
+    return @window.mouse_x >= x && @window.mouse_x < x + DIAMETER && 
+            @window.mouse_y >= y && @window.mouse_y < y + DIAMETER &&
+            @@circle[@window.mouse_x-x, @window.mouse_y-y] != "\0\0\0\0"
   end
 end
