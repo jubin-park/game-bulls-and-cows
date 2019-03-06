@@ -2,6 +2,7 @@ class NumberBall
   attr_accessor :x, :y, :z
   attr_accessor :nx, :ny
   attr_reader   :index
+  attr_writer   :picked
 
   DIAMETER      = 16
   COLOR_EASYMED = Gosu::Color.argb(0x0045B649)
@@ -42,8 +43,8 @@ class NumberBall
         if @mouse == :up
           @mouse = :down
           #p "down"
-          @event_method[:mouse_down].call(@index) if @event_method[:mouse_down].is_a?(Method)
           @picked = !@picked
+          @event_method[:mouse_down].call(@index) if @event_method[:mouse_down].is_a?(Method)
         end
       end
     else

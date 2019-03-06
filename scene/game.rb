@@ -32,8 +32,16 @@ class Scene
       my = @window.mouse_y.to_i
       # 숫자가 구멍 안에 들어올 때
       if my >= 40 && my < 72 && mx >= 0 && mx < DIGITS
+        # 이전 숫자
+        old = @your_numbers[mx]
+        if !old.nil?
+          @balls[old].picked = false
+          @balls[old].nx = 40 + old * 24
+          @balls[old].ny = 100
+        end
         @balls[index].nx = 96 + mx * 36
         @balls[index].ny = 48
+
         @your_numbers[mx] = index
         p @your_numbers
       # 원위치
