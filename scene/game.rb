@@ -32,11 +32,17 @@ class Scene
       my = @window.mouse_y.to_i
       # 숫자가 구멍 안에 들어올 때
       if my >= 40 && my < 72 && mx >= 0 && mx < DIGITS
-        p mx
+        @balls[index].nx = 96 + mx * 36
+        @balls[index].ny = 48
+        @your_numbers[mx] = index
+        p @your_numbers
       # 원위치
       else
         @balls[index].nx = 40 + index * 24
         @balls[index].ny = 100
+        if mx >= 0 && mx < DIGITS
+          @your_numbers[mx] = nil
+        end
       end
     end
 
