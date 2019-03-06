@@ -1,5 +1,6 @@
 class NumberBall
   attr_accessor :x, :y, :z
+  attr_accessor :nx, :ny
   attr_reader   :index
 
   DIAMETER      = 16
@@ -20,6 +21,8 @@ class NumberBall
 
     @mouse_sx = @mouse_sy = nil
     @mouse = :up
+
+    @event_method = Hash.new
   end
 
   def draw
@@ -38,14 +41,16 @@ class NumberBall
       if under_mouse?(@nx, @ny)
         if @mouse == :up
           @mouse = :down
-          p "down"
+          #p "down"
+          @event_method[:mouse_down].call(@index) if @event_method[:mouse_down].is_a?(Method)
           @picked = !@picked
         end
       end
     else
       if @mouse == :down
         @mouse = :up
-        p "up"
+        #p "up"
+        @event_method[:mouse_up].call(@index) if @event_method[:mouse_down].is_a?(Method)
       end
     end
 
@@ -53,33 +58,16 @@ class NumberBall
       @nx = @window.mouse_x.to_i - DIAMETER / 2
       @ny = @window.mouse_y.to_i - DIAMETER / 2
     end
-=begin
-    # 집지 않은 상태
-    if @picked == false
-      # 숫자 영역에 마우스가 올려질 때
-      if under_mouse?(@nx, @ny)
-        # 마우스를 누를 때
-        if Gosu.button_down?(Gosu::MS_LEFT)
-          p "pick up"
-          @picked = true
-        end
-      end
-    # 집은 상태
-    else
-      @nx = @window.mouse_x.to_i# - DIAMETER / 2
-      @ny = @window.mouse_y.to_i# - DIAMETER / 2
-      if Gosu.button_down?(Gosu::MS_LEFT)
-        p "pick down"
-        @picked = false
-      end
-    end
   end
-=end
-end
 
   def under_mouse?(x, y)
     return @window.mouse_x >= x && @window.mouse_x < x + DIAMETER && 
             @window.mouse_y >= y && @window.mouse_y < y + DIAMETER &&
             @@circle[@window.mouse_x-x, @window.mouse_y-y] != "\0\0\0\0"
   end
+
+  def set_method(type, mtd)
+    @event_method[type] = mtd
+  end
+
 end

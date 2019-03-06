@@ -1,23 +1,47 @@
 class Scene
   class Game
+
+    DIGITS = 4
+
     def initialize(window)
       @window = window
       @background = Gosu::Image.new("img/background.png")
-      @hole = Array[Gosu::Image.new "img/hole.png"] * 4
-      @number_ball = Array.new(10) {|i| NumberBall.new(window, 40 + i * 24, 100, 3, i)}
-      p @rand_numbers = generate_random_number(4)
-      @your_numbers = Array.new(4)
+      @holes = Array[Gosu::Image.new "img/hole.png"] * DIGITS
+      @balls = Array.new(10) {|i| NumberBall.new(window, 40 + i * 24, 100, 3, i)}
+      @balls.each do |ball|
+        ball.set_method(:mouse_down, method(:ball_pickdown))
+        ball.set_method(:mouse_up, method(:ball_pickup))
+      end
+      p @rand_numbers = generate_random_number(DIGITS)
+      @your_numbers = Array.new(DIGITS)
     end
 
     def draw
       @background.draw(0, 0, 0)
-      @hole.each_index {|i| @hole[i].draw(88 + i * 36, 40, 1)}
-      @number_ball.each{|ball| ball.draw}
+      @holes.each_index {|i| @holes[i].draw(88 + i * 36, 40, 1)}
+      @balls.each{|ball| ball.draw}
       Gosu.draw_rect(24, 176, 272, 120, Gosu::Color.argb(128, 0, 0, 0), 0)
     end
 
     def update
-      @number_ball.each{|ball| ball.update}
+      @balls.each{|ball| ball.update}
+    end
+
+    def ball_pickdown(index)
+      mx = (@window.mouse_x.to_i - 88) / 36
+      my = @window.mouse_y.to_i
+      # 숫자가 구멍 안에 들어올 때
+      if my >= 40 && my < 72 && mx >= 0 && mx < DIGITS
+        p mx
+      # 원위치
+      else
+        @balls[index].nx = 40 + index * 24
+        @balls[index].ny = 100
+      end
+    end
+
+    def ball_pickup(index)
+
     end
 
     def generate_random_number(digit)
