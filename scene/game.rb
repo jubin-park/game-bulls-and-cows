@@ -14,6 +14,7 @@ class Scene
       end
       p @rand_numbers = generate_random_number(DIGITS)
       @your_numbers = Array.new(DIGITS)
+      @pick = nil
     end
 
     def draw
@@ -25,36 +26,37 @@ class Scene
 
     def update
       @balls.each{|ball| ball.update}
-    end
-
-    def ball_pickdown(index)
-      mx = (@window.mouse_x.to_i - 88) / 36
-      my = @window.mouse_y.to_i
-      # 숫자가 구멍 안에 들어올 때
-      if my >= 40 && my < 72 && mx >= 0 && mx < DIGITS
-        # 이전 숫자
-        old = @your_numbers[mx]
-        if !old.nil?
-          @balls[old].picked = false
-          @balls[old].nx = 40 + old * 24
-          @balls[old].ny = 100
-        end
-        @balls[index].nx = 96 + mx * 36
-        @balls[index].ny = 48
-
-        @your_numbers[mx] = index
-        p @your_numbers
-      # 원위치
-      else
-        @balls[index].nx = 40 + index * 24
-        @balls[index].ny = 100
-        if mx >= 0 && mx < DIGITS
-          @your_numbers[mx] = nil
-        end
+      if @pick.is_a?(Integer)
+        @balls[@pick].nx = @window.mouse_x.to_i - 8
+        @balls[@pick].ny = @window.mouse_y.to_i - 8
       end
     end
 
-    def ball_pickup(index)
+    def ball_pickdown(number)
+      @pick = number
+      hx = (@window.mouse_x.to_i - 88) / 36
+      my = @window.mouse_y.to_i
+      # 숫자가 구멍 안에 들어올 때
+      if my >= 40 && my < 72 && hx >= 0 && hx < DIGITS
+        old_number = @your_numbers[hx]
+        # 이미 숫자가 존재한 경우
+        if old_number.is_a?(Integer)
+          # 원위치
+          @balls[old_number].nx = 40 + old_number * 24
+          @balls[old_number].ny = 100
+        end
+        @your_numbers[hx] = number
+        @balls[number].nx = 96 + hx * 36
+        @balls[number].ny = 48
+        p @your_numbers
+        @pick = nil
+      else
+        @balls[number].nx = 40 + number * 24
+        @balls[number].ny = 100
+      end
+    end
+
+    def ball_pickup(number)
 
     end
 

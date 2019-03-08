@@ -2,27 +2,23 @@ class NumberBall
   attr_accessor :x, :y, :z
   attr_accessor :nx, :ny
   attr_reader   :index
-  attr_writer   :picked
 
   DIAMETER      = 16
   COLOR_EASYMED = Gosu::Color.argb(0x0045B649)
   
   def initialize(window, x, y, z, index)
-    @@numbers ||= Gosu::Image.new("img/numbers.png")
-    @@circle  ||= Gosu::Image.new("img/circle16.png")
     @window = window
     @nx = @x = x
     @ny = @y = y
     @z = z
     @index = index
+
+    @@numbers ||= Gosu::Image.new("img/numbers.png")
+    @@circle  ||= Gosu::Image.new("img/circle16.png")
     @num = @@numbers.subimage(@index * DIAMETER, 0, DIAMETER, DIAMETER)
     @color_easymed = COLOR_EASYMED.dup
-
-    @picked = false
-
-    @mouse_sx = @mouse_sy = nil
+    
     @mouse = :up
-
     @event_method = Hash.new
   end
 
@@ -43,7 +39,6 @@ class NumberBall
         if @mouse == :up
           @mouse = :down
           #p "down"
-          @picked = !@picked
           @event_method[:mouse_down].call(@index) if @event_method[:mouse_down].is_a?(Method)
         end
       end
@@ -53,11 +48,6 @@ class NumberBall
         #p "up"
         @event_method[:mouse_up].call(@index) if @event_method[:mouse_down].is_a?(Method)
       end
-    end
-
-    if @picked == true
-      @nx = @window.mouse_x.to_i - DIAMETER / 2
-      @ny = @window.mouse_y.to_i - DIAMETER / 2
     end
   end
 
