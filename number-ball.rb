@@ -2,7 +2,7 @@ class NumberBall
   attr_accessor :x, :y, :z
   attr_accessor :nx, :ny
   attr_reader   :index
-  attr_reader   :picked
+  attr_accessor :picked
 
   DIAMETER      = 16
   COLOR_EASYMED = Gosu::Color.argb(0x0045B649)

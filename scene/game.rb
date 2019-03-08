@@ -40,21 +40,23 @@ class Scene
           # 원위치
           hi = @your_numbers.index(old_number)
           if hi.is_a?(Integer)
-            # SWAP
-            @balls[old_number].nx = 96 + hx * 36
-            @balls[old_number].ny = 48
-            @balls[number].nx = 96 + hi * 36
-            @balls[number].ny = 48
-            @your_numbers[hx] = old_number
-            @your_numbers[hi] = number
-          else
-            # 원위치
-            @balls[old_number].nx = 40 + old_number * 24
-            @balls[old_number].ny = 100
-            # 넣기
-            @balls[number].nx = 96 + hx * 36
-            @balls[number].ny = 48
-            @your_numbers[hx] = number
+            if hx == hi
+              # 원위치
+              @balls[old_number].nx = 40 + old_number * 24
+              @balls[old_number].ny = 100
+              # 넣기
+              @balls[number].nx = 96 + hx * 36
+              @balls[number].ny = 48
+              @your_numbers[hx] = number
+            else
+              # SWAP
+              @balls[old_number].nx = 96 + hi * 36
+              @balls[old_number].ny = 48
+              @balls[number].nx = 96 + hx * 36
+              @balls[number].ny = 48
+              @your_numbers[hx] = old_number
+              @your_numbers[hi] = number
+            end
           end
         else
           @balls[number].nx = 96 + hx * 36
