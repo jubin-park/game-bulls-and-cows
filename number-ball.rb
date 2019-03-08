@@ -2,6 +2,7 @@ class NumberBall
   attr_accessor :x, :y, :z
   attr_accessor :nx, :ny
   attr_reader   :index
+  attr_reader   :picked
 
   DIAMETER      = 16
   COLOR_EASYMED = Gosu::Color.argb(0x0045B649)
@@ -12,6 +13,7 @@ class NumberBall
     @ny = @y = y
     @z = z
     @index = index
+    @picked = false
 
     @@numbers ||= Gosu::Image.new("img/numbers.png")
     @@circle  ||= Gosu::Image.new("img/circle16.png")
@@ -33,12 +35,12 @@ class NumberBall
     else
       @color_easymed.alpha -= 8
     end
-
     if Gosu.button_down?(Gosu::MS_LEFT)
       if under_mouse?(@nx, @ny)
         if @mouse == :up
           @mouse = :down
           #p "down"
+          @picked = !@picked
           @event_method[:mouse_down].call(@index) if @event_method[:mouse_down].is_a?(Method)
         end
       end
@@ -48,6 +50,10 @@ class NumberBall
         #p "up"
         @event_method[:mouse_up].call(@index) if @event_method[:mouse_down].is_a?(Method)
       end
+    end
+    if @picked == true
+      @nx = @window.mouse_x.to_i - DIAMETER / 2
+      @ny = @window.mouse_y.to_i - DIAMETER / 2
     end
   end
 

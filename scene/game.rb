@@ -26,10 +26,6 @@ class Scene
 
     def update
       @balls.each{|ball| ball.update}
-      if @pick.is_a?(Integer)
-        @balls[@pick].nx = @window.mouse_x.to_i - 8
-        @balls[@pick].ny = @window.mouse_y.to_i - 8
-      end
     end
 
     def ball_pickdown(number)
