@@ -2,7 +2,7 @@ class NumberBall
   attr_accessor :x, :y, :z
   attr_accessor :nx, :ny
   attr_reader   :index
-  attr_accessor :picked
+  attr_accessor :picked, :in_hole
 
   DIAMETER      = 16
   COLOR_EASYMED = Gosu::Color.argb(0x0045B649)
@@ -14,6 +14,7 @@ class NumberBall
     @z = z
     @index = index
     @picked = false
+    @in_hole = false
 
     @@numbers ||= Gosu::Image.new("img/numbers.png")
     @@circle  ||= Gosu::Image.new("img/circle16.png")
@@ -30,13 +31,13 @@ class NumberBall
   end
 
   def update
-    if under_mouse?(@x, @y)
+    if under_mouse?(@x, @y, 16, 16)
       @color_easymed.alpha += 16
     else
       @color_easymed.alpha -= 8
     end
     if Gosu.button_down?(Gosu::MS_LEFT)
-      if under_mouse?(@nx, @ny)
+      if under_mouse?(@nx, @ny, 16, 16)
         if @mouse == :up
           @mouse = :down
           #p "down"
@@ -51,15 +52,15 @@ class NumberBall
         @event_method[:mouse_up].call(@index) if @event_method[:mouse_down].is_a?(Method)
       end
     end
-    if @picked == true
+    if @picked == true && @in_hole == false
       @nx = @window.mouse_x.to_i - DIAMETER / 2
       @ny = @window.mouse_y.to_i - DIAMETER / 2
     end
   end
 
-  def under_mouse?(x, y)
-    return @window.mouse_x >= x && @window.mouse_x < x + DIAMETER && 
-            @window.mouse_y >= y && @window.mouse_y < y + DIAMETER &&
+  def under_mouse?(x, y, w, h)
+    return @window.mouse_x >= x && @window.mouse_x < x + w && 
+            @window.mouse_y >= y && @window.mouse_y < y + h &&
             @@circle[@window.mouse_x-x, @window.mouse_y-y] != "\0\0\0\0"
   end
 
