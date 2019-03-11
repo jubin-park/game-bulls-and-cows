@@ -42,16 +42,16 @@ class NumberBall
         if under_mouse?(@nx, @ny, DIAMETER, DIAMETER)
           if @mouse == :up
             @mouse = :down
-            @event_method[:pick_up].call(@index) if @event_method[:pick_up].is_a?(Method)
             @picked = true
+            @event_method[:pick_up].call(@index) if @event_method[:pick_up].is_a?(Method)
           end
         end
       # 놓을 때
       else
         if @mouse == :up
           @mouse = :down
-          @event_method[:pick_down].call(@index) if @event_method[:pick_down].is_a?(Method)
           @picked = false
+          @event_method[:pick_down].call(@index) if @event_method[:pick_down].is_a?(Method)
         end
       end
     else

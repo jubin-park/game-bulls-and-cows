@@ -9,8 +9,8 @@ class Scene
       @holes = Array[Gosu::Image.new "img/hole.png"] * DIGITS
       @balls = Array.new(10) {|i| NumberBall.new(window, 40 + i * 24, 100, 3, i)}
       @balls.each do |ball|
-        ball.set_method(:mouse_down, method(:ball_pickdown))
-        ball.set_method(:mouse_up, method(:ball_pickup))
+        ball.set_method(:pick_up, method(:m_ball_pickup))
+        ball.set_method(:pick_down, method(:m_ball_pickdown))
       end
       p @rand_numbers = generate_random_number(DIGITS)
       @your_numbers = Array.new(DIGITS)
@@ -27,50 +27,69 @@ class Scene
       @balls.each{|ball| ball.update}
     end
 
-    def ball_pickdown(number)
-      h_index = (@window.mouse_x.to_i - 88) / 36
+    def locate_init_x(index)
+      40 + index * 24
+    end
+
+    def locate_init_y
+      100
+    end
+
+    def locate_hole_x(index)
+      96 + index * 36
+    end
+
+    def locate_hole_y
+      48
+    end
+
+    def m_ball_pickup(number)
+      target_hole = (@window.mouse_x.to_i - 88) / 36
       # 마우스가 구멍 안에 들어올 때
-      if @window.mouse_y >= 40 && @window.mouse_y < 72 && h_index >= 0 && h_index < DIGITS
+      if @window.mouse_y >= 40 && @window.mouse_y < 72 && target_hole >= 0 && target_hole < DIGITS
         # 구멍에 있는 숫자를 선택한 경우
         if @balls[number].in_hole == true
+          # 꺼낸다
           @balls[number].in_hole = false
-          @balls[number].picked = true
-          @your_numbers[h_index] = nil
-          @last ||= h_index
-          return
+          @your_numbers[target_hole] = nil
+          @last_pop ||= target_hole
+          p @your_numbers
         end
-        # 이미 있는 숫자
-        prev_number = @your_numbers[h_index]
-        if prev_number.is_a? Integer
-          if @last.is_a? Integer
-            # 스와핑
-            @balls[prev_number].in_hole = true
-            @balls[prev_number].nx = 96 + @last * 36
-            @balls[prev_number].ny = 48
-            @your_numbers[@last] = prev_number
-            @last = nil
-          else
-            # 원위치
-            @balls[prev_number].in_hole = false
-            @balls[prev_number].nx = 40 + prev_number * 24
-            @balls[prev_number].ny = 100
-          end
-        end
-        @balls[number].in_hole = true
-        @balls[number].nx = 96 + h_index * 36
-        @balls[number].ny = 48
-        @your_numbers[h_index] = number
-        p @your_numbers
-      else
-        @balls[number].in_hole = false
-        @balls[number].nx = 40 + number * 24
-        @balls[number].ny = 100
-        @last = nil
       end
     end
 
-    def ball_pickup(number)
-
+    def m_ball_pickdown(number)
+      target_hole = (@window.mouse_x.to_i - 88) / 36
+      # 마우스가 구멍 안에 들어올 때
+      if @window.mouse_y >= 40 && @window.mouse_y < 72 && target_hole >= 0 && target_hole < DIGITS
+        prev_number = @your_numbers[target_hole]
+        # 이미 있는 숫자
+        if prev_number.is_a?(Integer)
+          if @last_pop.is_a?(Integer)
+            # 스와핑
+            @balls[prev_number].in_hole = true
+            @balls[prev_number].nx = locate_hole_x(@last_pop)
+            @balls[prev_number].ny = locate_hole_y
+            @your_numbers[@last_pop] = prev_number
+            @last_pop = nil
+          else
+            # 원위치
+            @balls[prev_number].in_hole = false
+            @balls[prev_number].nx = locate_init_x(prev_number)
+            @balls[prev_number].ny = locate_init_y
+          end
+        end
+        @balls[number].in_hole = true
+        @balls[number].nx = locate_hole_x(target_hole)
+        @balls[number].ny = locate_hole_y
+        @your_numbers[target_hole] = number
+        p @your_numbers
+      else
+        @balls[number].in_hole = false
+        @balls[number].nx = locate_init_x(number)
+        @balls[number].ny = locate_init_y
+        @last_pop = nil
+      end
     end
 
     def generate_random_number(digit)
