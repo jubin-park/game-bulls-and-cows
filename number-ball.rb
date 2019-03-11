@@ -31,25 +31,33 @@ class NumberBall
   end
 
   def update
-    if under_mouse?(@x, @y, 16, 16)
+    if under_mouse?(@x, @y, DIAMETER, DIAMETER)
       @color_easymed.alpha += 16
     else
       @color_easymed.alpha -= 8
     end
     if Gosu.button_down?(Gosu::MS_LEFT)
-      if under_mouse?(@nx, @ny, 16, 16)
+      # 집을 때
+      if @picked == false
+        if under_mouse?(@nx, @ny, DIAMETER, DIAMETER)
+          if @mouse == :up
+            @mouse = :down
+            @event_method[:pick_up].call(@index) if @event_method[:pick_up].is_a?(Method)
+            @picked = true
+          end
+        end
+      # 놓을 때
+      else
         if @mouse == :up
           @mouse = :down
-          #p "down"
-          @picked = !@picked
-          @event_method[:mouse_down].call(@index) if @event_method[:mouse_down].is_a?(Method)
+          @event_method[:pick_down].call(@index) if @event_method[:pick_down].is_a?(Method)
+          @picked = false
         end
       end
     else
       if @mouse == :down
         @mouse = :up
         #p "up"
-        @event_method[:mouse_up].call(@index) if @event_method[:mouse_down].is_a?(Method)
       end
     end
     if @picked == true && @in_hole == false
