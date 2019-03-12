@@ -32,7 +32,11 @@ class NumberBall
 
   def update
     if under_mouse?(@x, @y, DIAMETER, DIAMETER)
-      @color_easymed.alpha += 16
+      if !@picked && !@in_hole
+        @color_easymed.alpha += 16
+      else
+        @color_easymed.alpha -= 8
+      end
     else
       @color_easymed.alpha -= 8
     end
