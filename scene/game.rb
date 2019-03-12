@@ -12,6 +12,12 @@ class Scene
         ball.set_method(:pick_up, method(:m_ball_pickup))
         ball.set_method(:pick_down, method(:m_ball_pickdown))
       end
+      @button_hit = Button.new(@window, 32, 32)
+      @button_hit.x = @window.width / 2 - 16
+      @button_hit.y = 128
+      @button_hit.z = 2
+      @button_hit.set_image(0, Gosu::Image.new("img/button-hit.png"))
+      @button_hit.set_image(1, Gosu::Image.new("img/button-hit.png"))
       p @rand_numbers = generate_random_number(DIGITS)
       @your_numbers = Array.new(DIGITS)
     end
@@ -20,6 +26,7 @@ class Scene
       @background.draw(0, 0, 0)
       @holes.each_index {|i| @holes[i].draw(88 + i * 36, 40, 1)}
       @balls.each{|ball| ball.draw}
+      @button_hit.draw
       Gosu.draw_rect(24, 176, 272, 120, Gosu::Color.argb(128, 0, 0, 0), 0)
     end
 
