@@ -18,8 +18,34 @@ class Scene
       @button_hit.z = 2
       @button_hit.set_image(0, Gosu::Image.new("img/button-hit.png"))
       @button_hit.set_image(1, Gosu::Image.new("img/button-hit.png"))
+      @button_hit.set_method(:mouse_down, method(:hit_down))
+      @button_hit.set_method(:mouse_up, method(:hit_up))
       p @rand_numbers = generate_random_number(DIGITS)
       @your_numbers = Array.new(DIGITS)
+    end
+
+    def hit_down
+      @button_hit.y += 1
+    end
+
+    def hit_up
+      @button_hit.y -= 1
+      bull = cow = 0
+      if @your_numbers.include?(nil)
+        p "Please fill the all numbers"
+        return
+      end
+      for i in 0...DIGITS
+        if @rand_numbers[i] == @your_numbers[i]
+          bull += 1
+        else
+          if @rand_numbers.include?(@your_numbers[i])
+            cow += 1
+          end
+        end
+      end
+
+      p "bull:#{bull}, cow:#{cow}"
     end
 
     def draw
@@ -32,6 +58,7 @@ class Scene
 
     def update
       @balls.each{|ball| ball.update}
+      @button_hit.update
     end
 
     def locate_init_x(index)
