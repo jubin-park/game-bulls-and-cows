@@ -56,7 +56,7 @@ class Button
         @area = :in
         if @mouse == :down
           #p "up"
-          @event_method[:mouse_up].call if @event_method[:mouse_down].is_a?(Method)
+          @event_method[:mouse_up].call if @event_method[:mouse_up].is_a?(Method)
           @mouse = :up
         end
       end
