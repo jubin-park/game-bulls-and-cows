@@ -3,7 +3,8 @@ class NumberBall
   attr_accessor :nx, :ny
   attr_reader   :index
   attr_accessor :picked, :in_hole
-
+  attr_reader   :num
+  
   DIAMETER      = 16
   COLOR_EASYMED = Gosu::Color.argb(0x0045B649)
   NUMBERS = Gosu::Image.new("img/numbers.png")

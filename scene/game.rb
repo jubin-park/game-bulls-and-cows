@@ -31,6 +31,7 @@ class Scene
       @image_log = Gosu::Image.new(EmptyImageSource.new(RECT_LOG[2], RECT_LOG[3], Gosu::Color::NONE))
       @rand_numbers = generate_random_number(DIGITS)
       @your_numbers = Array.new(DIGITS)
+      @image_log.insert(@balls[1].num, 0, 0)
     end
 
     def hit_down
