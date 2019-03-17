@@ -60,12 +60,10 @@ class Scene
 
     def button_down(id)
       if id == Gosu::MS_WHEEL_DOWN
-        p "down"
         @scroll_y += LOG_HEIGHT
-        @scroll_y = @container_log.height - RECT_LOG[3] if @scroll_y > @container_log.height - RECT_LOG[3]
+        @scroll_y = @container_log.height - RECT_LOG[3] if @scroll_y >= @container_log.height - RECT_LOG[3]
         @viewport_log = @container_log.subimage(0, @scroll_y, RECT_LOG[2], RECT_LOG[3])
       elsif id == Gosu::MS_WHEEL_UP
-        p "up"
         @scroll_y -= LOG_HEIGHT
         @scroll_y = 0 if @scroll_y < 0
         @viewport_log = @container_log.subimage(0, @scroll_y, RECT_LOG[2], RECT_LOG[3])
