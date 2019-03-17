@@ -118,7 +118,6 @@ class Scene
           @balls[number].in_hole = false
           @your_numbers[target_hole] = nil
           @last_pop ||= target_hole
-          p @your_numbers
         end
       end
     end
@@ -148,7 +147,6 @@ class Scene
         @balls[number].nx = locate_hole_x(target_hole)
         @balls[number].ny = locate_hole_y
         @your_numbers[target_hole] = number
-        p @your_numbers
       else
         @balls[number].in_hole = false
         @balls[number].nx = locate_init_x(number)
