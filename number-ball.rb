@@ -6,7 +6,9 @@ class NumberBall
 
   DIAMETER      = 16
   COLOR_EASYMED = Gosu::Color.argb(0x0045B649)
-  
+  NUMBERS = Gosu::Image.new("img/numbers.png")
+  CIRCLE = Gosu::Image.new("img/circle16.png")
+
   def initialize(window, x, y, z, index)
     @window = window
     @nx = @x = x
@@ -15,18 +17,14 @@ class NumberBall
     @index = index
     @picked = false
     @in_hole = false
-
-    @@numbers ||= Gosu::Image.new("img/numbers.png")
-    @@circle  ||= Gosu::Image.new("img/circle16.png")
-    @num = @@numbers.subimage(@index * DIAMETER, 0, DIAMETER, DIAMETER)
+    @num = NUMBERS.subimage(@index * DIAMETER, 0, DIAMETER, DIAMETER)
     @color_easymed = COLOR_EASYMED.dup
-    
     @mouse = :up
     @event_method = Hash.new
   end
 
   def draw
-    @@circle.draw(@x, @y, @z, 1, 1, @color_easymed)
+    CIRCLE.draw(@x, @y, @z, 1, 1, @color_easymed)
     @num.draw(@nx, @ny, @z)
   end
 
@@ -73,7 +71,7 @@ class NumberBall
   def under_mouse?(x, y, w, h)
     return @window.mouse_x >= x && @window.mouse_x < x + w && 
             @window.mouse_y >= y && @window.mouse_y < y + h &&
-            @@circle[@window.mouse_x-x, @window.mouse_y-y] != "\0\0\0\0"
+            CIRCLE[@window.mouse_x-x, @window.mouse_y-y] != "\0\0\0\0"
   end
 
   def set_method(type, mtd)

@@ -1,8 +1,7 @@
 class Scene
   class Game
-
     DIGITS = 4
-
+    LOG_RECT = [24, 176, 272, 120]
     def initialize(window)
       @window = window
       @background = Gosu::Image.new("img/background.png")
@@ -20,8 +19,9 @@ class Scene
       @button_hit.set_image(1, Gosu::Image.new("img/button-hit.png"))
       @button_hit.set_method(:mouse_down, method(:hit_down))
       @button_hit.set_method(:mouse_up, method(:hit_up))
-      p @rand_numbers = generate_random_number(DIGITS)
+      @rand_numbers = generate_random_number(DIGITS)
       @your_numbers = Array.new(DIGITS)
+      @image_log = Gosu::Image.new(EmptyImageSource.new(LOG_RECT[2], LOG_RECT[3], Gosu::Color::NONE))
     end
 
     def hit_down
@@ -56,7 +56,8 @@ class Scene
     end
 
     def draw_log
-      Gosu.draw_rect(24, 176, 272, 120, Gosu::Color.argb(128, 0, 0, 0), 0)
+      Gosu.draw_rect(*LOG_RECT, Gosu::Color.argb(128, 0, 0, 0), 3)
+      @image_log.draw(LOG_RECT[0], LOG_RECT[1], 4)
     end
 
     def update
