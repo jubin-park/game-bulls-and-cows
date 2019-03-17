@@ -44,7 +44,6 @@ class Scene
           end
         end
       end
-
       p "bull:#{bull}, cow:#{cow}"
     end
 
@@ -53,6 +52,10 @@ class Scene
       @holes.each_index {|i| @holes[i].draw(88 + i * 36, 40, 1)}
       @balls.each{|ball| ball.draw}
       @button_hit.draw
+      draw_log
+    end
+
+    def draw_log
       Gosu.draw_rect(24, 176, 272, 120, Gosu::Color.argb(128, 0, 0, 0), 0)
     end
 
