@@ -10,15 +10,15 @@ class Scene
       @button_start.set_image(0, Gosu::Image.new("img/button-start0.png"))
       @button_start.set_image(1, Gosu::Image.new("img/button-start1.png"))
       @button_start.set_image(2, Gosu::Image.new("img/button-start2.png"))
-      @button_start.set_method(:mouse_down, method(:button_down))
-      @button_start.set_method(:mouse_up, method(:button_up))
+      @button_start.set_method(:mouse_down, method(:m_button_start_down))
+      @button_start.set_method(:mouse_up, method(:m_button_start_up))
     end
 
-    def button_up
+    def m_button_start_up
       SceneManager.switch(Scene::Game)
     end
 
-    def button_down; end
+    def m_button_start_down; end
 
     def draw
       @background.draw(0, 0, 0)

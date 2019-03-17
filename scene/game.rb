@@ -9,6 +9,8 @@ class Scene
     end
 
     DIGITS = 4
+    LOG_MAX_SIZE = 8
+    LOG_HEIGHT = 24
     RECT_LOG = [24, 168, 272, 128]
     IMAGE_BULL = Gosu::Image.new("img/bull.png")
     IMAGE_COW = Gosu::Image.new("img/cow.png")
@@ -30,11 +32,15 @@ class Scene
       @button_hit.set_image(1, Gosu::Image.new("img/button-hit.png"))
       @button_hit.set_method(:mouse_down, method(:m_hit_down))
       @button_hit.set_method(:mouse_up, method(:m_hit_up))
-      @image_log = Gosu::Image.new(EmptyImageSource.new(RECT_LOG[2], RECT_LOG[3], Gosu::Color::NONE))
+      @container_log = Gosu::Image.new(EmptyImageSource.new(RECT_LOG[2], LOG_MAX_SIZE * LOG_HEIGHT, Gosu::Color::NONE))
+      
       p @rand_numbers = generate_random_number(DIGITS)
       @your_numbers = Array.new(DIGITS)
       @your_numbers = [1, 2, 3, 4]
       @log_y = 0
+      @queue_log = []
+      @scroll_y = 0
+      @viewport_log = @container_log.subimage(0, @scroll_y, RECT_LOG[2], RECT_LOG[3])
     end
 
     def draw
@@ -44,7 +50,7 @@ class Scene
       @button_hit.draw
       # draw log
       Gosu.draw_rect(*RECT_LOG, Gosu::Color.argb(128, 0, 0, 0), ZOrder::LOG_BOX)
-      @image_log.draw(RECT_LOG[0], RECT_LOG[1], ZOrder::LOG_BOX)
+      @viewport_log.draw(RECT_LOG[0], RECT_LOG[1], ZOrder::LOG_BOX)
     end
 
     def update
@@ -52,21 +58,43 @@ class Scene
       @button_hit.update
     end
 
+    def button_down(id)
+      if id == Gosu::MS_WHEEL_DOWN
+        p "down"
+        @scroll_y += LOG_HEIGHT
+        @scroll_y = @container_log.height - RECT_LOG[3] if @scroll_y > @container_log.height - RECT_LOG[3]
+        @viewport_log = @container_log.subimage(0, @scroll_y, RECT_LOG[2], RECT_LOG[3])
+      elsif id == Gosu::MS_WHEEL_UP
+        p "up"
+        @scroll_y -= LOG_HEIGHT
+        @scroll_y = 0 if @scroll_y < 0
+        @viewport_log = @container_log.subimage(0, @scroll_y, RECT_LOG[2], RECT_LOG[3])
+      end
+    end
+
     def add_log(bull, cow)
+      log = Gosu::Image.new(EmptyImageSource.new(RECT_LOG[2], LOG_HEIGHT, Gosu::Color::NONE))
       for i in 0...DIGITS
         number = @balls[@your_numbers[i]].num
-        @image_log.insert(number, 8 + i * 16, 8 + @log_y)
+        log.insert(number, 8 + i * 16, 8)
       end
       x = 100
       for b in 0...bull
-        @image_log.insert(IMAGE_BULL, x, @log_y)
+        log.insert(IMAGE_BULL, x, 0)
         x += 24
       end
       for c in 0...cow
-        @image_log.insert(IMAGE_COW, x, @log_y)
+        log.insert(IMAGE_COW, x, 0)
         x += 24
       end
-      @log_y += 24
+      @queue_log.push(log)
+      if @queue_log.size > LOG_MAX_SIZE
+        @queue_log.shift
+        @queue_log.each_index {|i| @container_log.insert(@queue_log[i], 0, i * LOG_HEIGHT)}
+      else
+        @container_log.insert(log, 0, @log_y)
+        @log_y += LOG_HEIGHT
+      end
     end
 
     def locate_init_x(index)

@@ -19,12 +19,6 @@ class GameWindow < Gosu::Window
   end
 
   def button_down(id)
-    if (id == Gosu::MsLeft)
-      #p "click"
-    elsif id == Gosu::MS_WHEEL_DOWN #Gosu.button_down?(Gosu::MS_WHEEL_DOWN)
-      p "down"
-    elsif Gosu.button_down?(Gosu::MS_WHEEL_UP)
-      p "up"
-    end
+    SceneManager.now.button_down(id) if SceneManager.now.class.instance_methods(false).include?(:button_down)
   end
 end
