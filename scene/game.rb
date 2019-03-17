@@ -1,12 +1,21 @@
 class Scene
   class Game
+    module ZOrder
+      BACKGROUND = 0
+      HOLE = 1
+      NUMBER = 2
+      BUTTON_HIT = 3
+      LOG_BOX = 4
+    end
+
     DIGITS = 4
-    LOG_RECT = [24, 176, 272, 120]
+    RECT_LOG = [24, 176, 272, 120]
+
     def initialize(window)
       @window = window
       @background = Gosu::Image.new("img/background.png")
       @holes = Array[Gosu::Image.new "img/hole.png"] * DIGITS
-      @balls = Array.new(10) {|i| NumberBall.new(window, 40 + i * 24, 100, 3, i)}
+      @balls = Array.new(10) {|i| NumberBall.new(window, 40 + i * 24, 100, ZOrder::NUMBER, i)}
       @balls.each do |ball|
         ball.set_method(:pick_up, method(:m_ball_pickup))
         ball.set_method(:pick_down, method(:m_ball_pickdown))
@@ -14,14 +23,14 @@ class Scene
       @button_hit = Button.new(@window, 32, 32)
       @button_hit.x = @window.width / 2 - 16
       @button_hit.y = 128
-      @button_hit.z = 2
+      @button_hit.z = ZOrder::BUTTON_HIT
       @button_hit.set_image(0, Gosu::Image.new("img/button-hit.png"))
       @button_hit.set_image(1, Gosu::Image.new("img/button-hit.png"))
       @button_hit.set_method(:mouse_down, method(:hit_down))
       @button_hit.set_method(:mouse_up, method(:hit_up))
+      @image_log = Gosu::Image.new(EmptyImageSource.new(RECT_LOG[2], RECT_LOG[3], Gosu::Color::NONE))
       @rand_numbers = generate_random_number(DIGITS)
       @your_numbers = Array.new(DIGITS)
-      @image_log = Gosu::Image.new(EmptyImageSource.new(LOG_RECT[2], LOG_RECT[3], Gosu::Color::NONE))
     end
 
     def hit_down
@@ -48,16 +57,16 @@ class Scene
     end
 
     def draw
-      @background.draw(0, 0, 0)
-      @holes.each_index {|i| @holes[i].draw(88 + i * 36, 40, 1)}
+      @background.draw(0, 0, ZOrder::BACKGROUND)
+      @holes.each_index {|i| @holes[i].draw(88 + i * 36, 40, ZOrder::HOLE)}
       @balls.each{|ball| ball.draw}
       @button_hit.draw
       draw_log
     end
 
     def draw_log
-      Gosu.draw_rect(*LOG_RECT, Gosu::Color.argb(128, 0, 0, 0), 3)
-      @image_log.draw(LOG_RECT[0], LOG_RECT[1], 4)
+      Gosu.draw_rect(*RECT_LOG, Gosu::Color.argb(128, 0, 0, 0), ZOrder::LOG_BOX)
+      @image_log.draw(RECT_LOG[0], RECT_LOG[1], ZOrder::LOG_BOX)
     end
 
     def update
