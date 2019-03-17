@@ -1,4 +1,4 @@
-# source from - https://www.libgosu.org/cgi-bin/mwf/topic_show.pl?pid=8924#pid8924
+# source from: https://www.libgosu.org/cgi-bin/mwf/topic_show.pl?pid=8924#pid8924
 module Gosu
   class Image
     def [](x, y) # Returns a binary string with r/g/b/a as the characters
@@ -12,7 +12,7 @@ module Gosu
   end
 end
 
-# source from - @bestguigui
+# source from: @bestguigui on Discord
 class EmptyImageSource
   private
   def initialize(columns, rows, gosu_color)

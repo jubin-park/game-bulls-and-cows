@@ -9,7 +9,9 @@ class Scene
     end
 
     DIGITS = 4
-    RECT_LOG = [24, 176, 272, 120]
+    RECT_LOG = [24, 168, 272, 128]
+    IMAGE_BULL = Gosu::Image.new("img/bull.png")
+    IMAGE_COW = Gosu::Image.new("img/cow.png")
 
     def initialize(window)
       @window = window
@@ -26,35 +28,13 @@ class Scene
       @button_hit.z = ZOrder::BUTTON_HIT
       @button_hit.set_image(0, Gosu::Image.new("img/button-hit.png"))
       @button_hit.set_image(1, Gosu::Image.new("img/button-hit.png"))
-      @button_hit.set_method(:mouse_down, method(:hit_down))
-      @button_hit.set_method(:mouse_up, method(:hit_up))
+      @button_hit.set_method(:mouse_down, method(:m_hit_down))
+      @button_hit.set_method(:mouse_up, method(:m_hit_up))
       @image_log = Gosu::Image.new(EmptyImageSource.new(RECT_LOG[2], RECT_LOG[3], Gosu::Color::NONE))
-      @rand_numbers = generate_random_number(DIGITS)
+      p @rand_numbers = generate_random_number(DIGITS)
       @your_numbers = Array.new(DIGITS)
-      @image_log.insert(@balls[1].num, 0, 0)
-    end
-
-    def hit_down
-      @button_hit.y += 1
-    end
-
-    def hit_up
-      @button_hit.y -= 1
-      bull = cow = 0
-      if @your_numbers.include?(nil)
-        p "Please fill the all numbers"
-        return
-      end
-      for i in 0...DIGITS
-        if @rand_numbers[i] == @your_numbers[i]
-          bull += 1
-        else
-          if @rand_numbers.include?(@your_numbers[i])
-            cow += 1
-          end
-        end
-      end
-      p "bull:#{bull}, cow:#{cow}"
+      @your_numbers = [1, 2, 3, 4]
+      @log_y = 0
     end
 
     def draw
@@ -62,10 +42,7 @@ class Scene
       @holes.each_index {|i| @holes[i].draw(88 + i * 36, 40, ZOrder::HOLE)}
       @balls.each{|ball| ball.draw}
       @button_hit.draw
-      draw_log
-    end
-
-    def draw_log
+      # draw log
       Gosu.draw_rect(*RECT_LOG, Gosu::Color.argb(128, 0, 0, 0), ZOrder::LOG_BOX)
       @image_log.draw(RECT_LOG[0], RECT_LOG[1], ZOrder::LOG_BOX)
     end
@@ -73,6 +50,23 @@ class Scene
     def update
       @balls.each{|ball| ball.update}
       @button_hit.update
+    end
+
+    def add_log(bull, cow)
+      for i in 0...DIGITS
+        number = @balls[@your_numbers[i]].num
+        @image_log.insert(number, 8 + i * 16, 8 + @log_y)
+      end
+      x = 100
+      for b in 0...bull
+        @image_log.insert(IMAGE_BULL, x, @log_y)
+        x += 24
+      end
+      for c in 0...cow
+        @image_log.insert(IMAGE_COW, x, @log_y)
+        x += 24
+      end
+      @log_y += 24
     end
 
     def locate_init_x(index)
@@ -89,6 +83,29 @@ class Scene
 
     def locate_hole_y
       48
+    end
+
+    def m_hit_down
+      @button_hit.y += 1
+    end
+
+    def m_hit_up
+      @button_hit.y -= 1
+      bull = cow = 0
+      for i in 0...DIGITS
+        if @your_numbers[i] == nil
+          p "Please fill the all numbers"
+          return
+        end
+        if @rand_numbers[i] == @your_numbers[i]
+          bull += 1
+        else
+          if @rand_numbers.include?(@your_numbers[i])
+            cow += 1
+          end
+        end
+      end
+      add_log(bull, cow)
     end
 
     def m_ball_pickup(number)
