@@ -62,20 +62,29 @@ class Scene
     def button_down(id)
       case id
       when Gosu::MS_WHEEL_DOWN
-        if @log_y > @viewport_log.height
-          @scroll_y += LOG_HEIGHT
-          @scroll_y = @container_log.height - RECT_LOG[3] + PADDING * 2 if @scroll_y >= @container_log.height - RECT_LOG[3] + PADDING * 2
-          @viewport_log = @container_log.subimage(0, @scroll_y, RECT_LOG[2] - PADDING * 2, RECT_LOG[3] - PADDING * 2)
+        if log_under_mouse?
+          if @log_y > @viewport_log.height
+            @scroll_y += LOG_HEIGHT
+            @scroll_y = @container_log.height - RECT_LOG[3] + PADDING * 2 if @scroll_y >= @container_log.height - RECT_LOG[3] + PADDING * 2
+            @viewport_log = @container_log.subimage(0, @scroll_y, RECT_LOG[2] - PADDING * 2, RECT_LOG[3] - PADDING * 2)
+          end
         end
       when Gosu::MS_WHEEL_UP
-        @scroll_y -= LOG_HEIGHT
-        @scroll_y = 0 if @scroll_y < 0
-        @viewport_log = @container_log.subimage(0, @scroll_y, RECT_LOG[2] - PADDING * 2, RECT_LOG[3] - PADDING * 2)
+        if log_under_mouse?
+          @scroll_y -= LOG_HEIGHT
+          @scroll_y = 0 if @scroll_y < 0
+          @viewport_log = @container_log.subimage(0, @scroll_y, RECT_LOG[2] - PADDING * 2, RECT_LOG[3] - PADDING * 2)
+        end
       end
     end
 
+    def log_under_mouse?
+      return @window.mouse_x >= RECT_LOG[0] && @window.mouse_x < RECT_LOG[0] + @viewport_log.width &&
+              @window.mouse_y >= RECT_LOG[1] && @window.mouse_y < RECT_LOG[1] + @viewport_log.height
+    end
+
     def add_log(bull, cow)
-      log = Gosu::Image.new(EmptyImageSource.new(RECT_LOG[2] - PADDING * 2, LOG_HEIGHT, Gosu::Color.argb(128, rand(255), rand(255), rand(255))))#Gosu::Color::NONE))
+      log = Gosu::Image.new(EmptyImageSource.new(RECT_LOG[2] - PADDING * 2, LOG_HEIGHT, Gosu::Color::NONE)) # Gosu::Color.argb(128, rand(255), rand(255), rand(255))
       for i in 0...DIGITS
         number = @balls[@your_numbers[i]].num
         log.insert(number, 8 + i * 16, 4)
