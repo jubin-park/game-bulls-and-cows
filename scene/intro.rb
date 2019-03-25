@@ -3,9 +3,10 @@ class Scene
     def initialize(window)
       @window = window
       @background = Gosu::Image.new("img/background.png")
+      @logo = Gosu::Image.new("img/logo.png")
       @button_start = Button.new(@window, 128, 48)
       @button_start.x = 96
-      @button_start.y = 160
+      @button_start.y = 196
       @button_start.z = 1
       @button_start.set_image(0, Gosu::Image.new("img/button-start0.png"))
       @button_start.set_image(1, Gosu::Image.new("img/button-start1.png"))
@@ -22,6 +23,7 @@ class Scene
 
     def draw
       @background.draw(0, 0, 0)
+      @logo.draw(0, -40, 1)
       @button_start.draw
     end
 
