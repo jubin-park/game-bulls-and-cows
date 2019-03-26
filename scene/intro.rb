@@ -13,6 +13,9 @@ class Scene
       @button_start.set_image(2, Gosu::Image.new("img/button-start2.png"))
       @button_start.set_method(:mouse_down, method(:m_button_start_down))
       @button_start.set_method(:mouse_up, method(:m_button_start_up))
+      @scale = 2.0
+      @color = Gosu::Color::WHITE.dup
+      @color.alpha = 0
     end
 
     def m_button_start_up
@@ -23,8 +26,16 @@ class Scene
 
     def draw
       @background.draw(0, 0, 0)
-      @logo.draw(0, -40, 1)
+      draw_scaled_logo
       @button_start.draw
+    end
+
+    def draw_scaled_logo
+      @scale *= 0.95
+      @scale = 1.0 if @scale < 1
+      @color.alpha += 10
+      @color.alpha = 255 if @color.alpha > 255
+      @logo.draw_rot(160, 120, 1, 0.0, 0.5, 0.5, @scale, @scale, @color)
     end
 
     def update
