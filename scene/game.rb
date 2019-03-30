@@ -6,6 +6,7 @@ class Scene
       NUMBER = 2
       BUTTON_HIT = 3
       LOG_BOX = 4
+      UI = 10
     end
 
     DIGITS = 4
@@ -41,6 +42,10 @@ class Scene
       @log_y = 0
       @scroll_y = 0
       @queue_log = []
+      @game_end = false
+      @hit_count = 0
+      @font = Gosu::Font.new(20)
+      @zoom_x = 1.0
     end
 
     def draw
@@ -48,14 +53,23 @@ class Scene
       @holes.each_index {|i| @holes[i].draw(locate_hole_x(i), locate_hole_y, ZOrder::HOLE)}
       @balls.each{|ball| ball.draw}
       @button_hit.draw
-      # draw log
       Gosu.draw_rect(*RECT_LOG, Gosu::Color.argb(128, 0, 0, 0), ZOrder::LOG_BOX)
       @viewport_log.draw(RECT_LOG[0] + PADDING, RECT_LOG[1] + PADDING, ZOrder::LOG_BOX)
+      if @hit_count > 0
+        @font.draw_text("#{@hit_count} Hit !", 10, 10, ZOrder::UI, @zoom_x, 1.0, Gosu::Color::YELLOW)
+        @zoom_x *= 0.85
+        @zoom_x = 1.0 if @zoom_x < 1.0
+      end
+      if @game_end == true
+        
+      end
     end
 
     def update
-      @balls.each{|ball| ball.update}
-      @button_hit.update
+      if @game_end == false
+        @balls.each{|ball| ball.update}
+        @button_hit.update
+      end
     end
 
     def button_down(id)
@@ -149,6 +163,9 @@ class Scene
         end
       end
       add_log(bull, cow)
+      @game_end = (bull == DIGITS)
+      @hit_count += 1
+      @zoom_x = 2.5
     end
 
     def m_ball_pickup(number)
