@@ -38,7 +38,6 @@ class Scene
       @viewport_log = @container_log.subimage(0, 0, RECT_LOG[2] - PADDING * 2, RECT_LOG[3] - PADDING * 2)
       p @rand_numbers = generate_random_number(DIGITS)
       @your_numbers = Array.new(DIGITS)
-      @your_numbers = [1, 2, 3, 4]
       @log_y = 0
       @scroll_y = 0
       @queue_log = []
