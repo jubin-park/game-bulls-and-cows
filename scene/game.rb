@@ -43,9 +43,13 @@ class Scene
       @scroll_y = 0
       @queue_log = []
       @game_end = false
+      @show_alert = false
       @hit_count = 0
-      @font = Gosu::Font.new(20)
+      @font_count = Gosu::Font.new(20)
+      @font_alert = Gosu::Image.from_text("Please fill the all numbers", 24)
+      @ms_alert = 0
       @zoom_x = 1.0
+      @color_alert = Gosu::Color::YELLOW.dup
     end
 
     def draw
@@ -56,13 +60,19 @@ class Scene
       Gosu.draw_rect(*RECT_LOG, Gosu::Color.argb(128, 0, 0, 0), ZOrder::LOG_BOX)
       @viewport_log.draw(RECT_LOG[0] + PADDING, RECT_LOG[1] + PADDING, ZOrder::LOG_BOX)
       if @hit_count > 0
-        @font.draw_text("#{@hit_count} Hit !", 10, 10, ZOrder::UI, @zoom_x, 1.0, Gosu::Color::YELLOW)
+        @font_count.draw_text("#{@hit_count} Hit !", 10, 10, ZOrder::UI, @zoom_x, 1.0, Gosu::Color::YELLOW)
         @zoom_x *= 0.85
         @zoom_x = 1.0 if @zoom_x < 1.0
       end
-      if @game_end == true
-        
+      draw_alert_message if @show_alert == true
+    end
+
+    def draw_alert_message
+      if Gosu.milliseconds - @ms_alert >= 1500
+        @color_alert.alpha -= 10
+        @short_alert = false if @color_alert.alpha <= 0
       end
+      @font_alert.draw(WIDTH / 2 - @font_alert.width / 2, HEIGHT / 2 - 10, ZOrder::UI, 1.0, 1.0, @color_alert)
     end
 
     def update
@@ -151,7 +161,9 @@ class Scene
       bull = cow = 0
       for i in 0...DIGITS
         if @your_numbers[i] == nil
-          p "Please fill the all numbers"
+          @ms_alert = Gosu.milliseconds
+          @show_alert = true
+          @color_alert.alpha = 255
           return
         end
         if @rand_numbers[i] == @your_numbers[i]
